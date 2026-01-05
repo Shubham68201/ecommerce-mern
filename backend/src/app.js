@@ -3,6 +3,8 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import authRoutes from './routes/authRoutes.js';
+import productRoutes from './routes/productRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 import errorMiddleware from './middlewares/error.js';
 import notFound from './middlewares/notFound.js';
 
@@ -11,10 +13,12 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    credentials: true
+  })
+);
 app.use(cookieParser());
 
 if (process.env.NODE_ENV === 'development') {
@@ -32,6 +36,8 @@ app.get('/api/v1/health', (req, res) => {
 
 // Routes
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1', productRoutes);
+app.use('/api/v1/admin', adminRoutes);
 
 // Error handling
 app.use(notFound);
