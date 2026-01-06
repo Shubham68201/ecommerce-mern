@@ -1,3 +1,8 @@
+import sendEmail from '../utils/sendEmail.js';
+import {
+  orderConfirmationTemplate,
+  orderShippedTemplate
+} from '../templates/emailTemplates.js';
 import Order from '../models/Order.js';
 import Product from '../models/Product.js';
 import asyncHandler from '../utils/asyncHandler.js';
@@ -8,6 +13,7 @@ import crypto from 'crypto';
 /* =========================
    CREATE NEW ORDER
 ========================= */
+// Create New Order (Updated with email)
 export const newOrder = asyncHandler(async (req, res, next) => {
   const {
     shippingInfo,
@@ -28,8 +34,19 @@ export const newOrder = asyncHandler(async (req, res, next) => {
     shippingPrice,
     totalPrice,
     user: req.user._id,
-    paidAt: paymentInfo?.status === 'succeeded' ? Date.now() : null
+    paidAt: Date.now()
   });
+
+  // Send order confirmation email
+  try {
+    await sendEmail({
+      email: req.user.email,
+      subject: 'Order Confirmation - E-Commerce',
+      message: orderConfirmationTemplate(order, req.user)
+    });
+  } catch (error) {
+    console.log('Email sending failed:', error.message);
+  }
 
   res.status(201).json({
     success: true,
@@ -92,8 +109,9 @@ export const getAllOrders = asyncHandler(async (req, res, next) => {
 /* =========================
    UPDATE ORDER STATUS (ADMIN)
 ========================= */
+// Update Order Status (Updated with email)
 export const updateOrder = asyncHandler(async (req, res, next) => {
-  const order = await Order.findById(req.params.id);
+  const order = await Order.findById(req.params.id).populate('user', 'name email');
 
   if (!order) {
     return next(new ErrorHandler('Order not found', 404));
@@ -103,9 +121,21 @@ export const updateOrder = asyncHandler(async (req, res, next) => {
     return next(new ErrorHandler('Order already delivered', 400));
   }
 
+  // Update stock when order is shipped
   if (req.body.status === 'Shipped') {
     for (const item of order.orderItems) {
       await updateStock(item.product, item.quantity);
+    }
+
+    // Send shipped email
+    try {
+      await sendEmail({
+        email: order.user.email,
+        subject: 'Your Order Has Shipped - E-Commerce',
+        message: orderShippedTemplate(order, order.user)
+      });
+    } catch (error) {
+      console.log('Email sending failed:', error.message);
     }
   }
 
