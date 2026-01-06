@@ -10,13 +10,17 @@ jobs:
   backend-test:
     runs-on: ubuntu-latest
     
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
     steps:
       - uses: actions/checkout@v3
       
-      - name: Setup Node.js
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: ${{ matrix.node-version }}
           
       - name: Install Backend Dependencies
         working-directory: ./backend
@@ -24,8 +28,14 @@ jobs:
         
       - name: Run Backend Tests
         working-directory: ./backend
-        run: npm test
+        run: npm test -- --coverage
         
+      - name: Upload Coverage Reports
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./backend/coverage/lcov.info
+          flags: backend
+          
   frontend-build:
     runs-on: ubuntu-latest
     

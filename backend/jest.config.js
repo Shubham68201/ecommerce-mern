@@ -12,10 +12,34 @@ export default {
   testMatch: ["**/tests/**/*.test.js"],
 
   collectCoverageFrom: [
-    "src/**/*.js",
-    "!src/server.js",
-    "!src/config/*.js",
-  ],
+  // ✅ Core business logic
+  'src/controllers/**/*.js',
+  'src/models/**/*.js',
+  'src/middlewares/**/*.js',
+  'src/utils/**/*.js',
 
-  setupFilesAfterEnv: ["backend/tests/setup.js"],
+  // ❌ App bootstrap
+  '!src/app.js',
+  '!src/server.js',
+
+  // ❌ Upload / file infra
+  '!src/controllers/uploadController.js',
+  '!src/middlewares/upload.js',
+
+  // ❌ Routes (no logic)
+  '!src/routes/**',
+
+  // ❌ Seeders & scripts
+  '!src/utils/seeder.js',
+  '!src/utils/orderSeeder.js',
+
+  // ❌ Trivial helpers
+  '!src/utils/apiResponse.js',
+
+  // ❌ 404 handler
+  '!src/middlewares/notFound.js',
+],
+
+
+  setupFilesAfterEnv: ["<rootDir>/tests/setup.js"],
 };

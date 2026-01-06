@@ -27,6 +27,9 @@ export const registerUser = asyncHandler(async (req, res, next) => {
     password
   });
 
+  // Hide password for response
+  user.password = undefined;
+
   // Send welcome email
   try {
     await sendEmail({
@@ -65,6 +68,9 @@ export const loginUser = asyncHandler(async (req, res, next) => {
     return next(new ErrorHandler('Invalid email or password', 401));
   }
 
+  // Hide password before sending
+  user.password = undefined;
+  
   sendToken(user, 200, res, 'Login successful');
 });
 
