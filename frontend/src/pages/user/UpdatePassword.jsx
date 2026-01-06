@@ -1,0 +1,1 @@
+const UpdatePassword = () => <div>UpdatePassword Page</div>; export default UpdatePassword;

@@ -1,0 +1,1 @@
+const UpdateProduct = () => <div>UpdateProduct Page</div>; export default UpdateProduct;

@@ -1,0 +1,1 @@
+const Shipping = () => <div>Shipping Page</div>; export default Shipping;

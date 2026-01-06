@@ -1,0 +1,1 @@
+const ProductList = () => <div>ProductList Page</div>; export default ProductList;

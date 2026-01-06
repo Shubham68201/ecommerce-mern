@@ -1,0 +1,1 @@
+const OrderList = () => <div>OrderList Page</div>; export default OrderList;

@@ -1,0 +1,1 @@
+const ConfirmOrder = () => <div>ConfirmOrder Page</div>; export default ConfirmOrder;

@@ -1,0 +1,1 @@
+const Payment = () => <div>Payment Page</div>; export default Payment;

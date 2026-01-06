@@ -1,0 +1,1 @@
+const NewProduct = () => <div>NewProduct Page</div>; export default NewProduct;

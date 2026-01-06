@@ -1,0 +1,1 @@
+const UpdateProfile = () => <div>UpdateProfile Page</div>; export default UpdateProfile;

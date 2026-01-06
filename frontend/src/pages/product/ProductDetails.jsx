@@ -1,0 +1,1 @@
+const ProductDetails = () => <div>ProductDetails Page</div>; export default ProductDetails;
