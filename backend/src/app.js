@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import authRoutes from './routes/authRoutes.js';
 import productRoutes from './routes/productRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import errorMiddleware from './middlewares/error.js';
 import notFound from './middlewares/notFound.js';
@@ -37,6 +38,7 @@ app.get('/api/v1/health', (req, res) => {
 // Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1', productRoutes);
+app.use('/api/v1', orderRoutes);
 app.use('/api/v1/admin', adminRoutes);
 
 // Error handling

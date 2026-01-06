@@ -71,8 +71,7 @@ userSchema.methods.getJWTToken = function () {
   });
 };
 
-// Create indexes for better performance
-userSchema.index({ email: 1 });
+// Create indexes for better performance\
 userSchema.index({ createdAt: -1 });
 
 export default mongoose.model('User', userSchema);
