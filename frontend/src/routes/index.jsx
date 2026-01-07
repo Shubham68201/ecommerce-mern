@@ -2,6 +2,11 @@ import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
 import Home from '../pages/Home';
 import Login from '../pages/auth/Login';
+import About from '../pages/static/About';
+import Contact from '../pages/static/Contact';
+import FAQ from '../pages/static/FAQ';
+import ShippingPolicy from '../pages/static/ShippingPolicy';
+import ReturnsPolicy from '../pages/static/ReturnsPolicy';
 import Register from '../pages/auth/Register';
 import ProductDetails from '../pages/product/ProductDetails';
 import Products from '../pages/product/Products';
@@ -36,6 +41,26 @@ const router = createBrowserRouter([
       {
         path: 'login',
         element: <Login />,
+      },
+      {
+        path: 'about',
+        element: <About />,
+      },
+      {
+        path: 'contact',
+        element: <Contact />,
+      },
+      {
+        path: 'faq',
+        element: <FAQ />,
+      },
+      {
+        path: 'shipping',
+        element: <ShippingPolicy />,
+      },
+      {
+        path: 'returns',
+        element: <ReturnsPolicy />,
       },
       {
         path: 'register',
