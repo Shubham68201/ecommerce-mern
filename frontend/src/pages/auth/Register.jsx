@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { register, clearError } from '../../redux/slices/authSlice';
 import toast from 'react-hot-toast';
-import { FiMail, FiLock, FiUser } from 'react-icons/fi';
+import { FiMail, FiLock, FiUser, FiUpload } from 'react-icons/fi';
 import Button from '../../components/ui/Button';
 
 const Register = () => {
@@ -13,6 +13,9 @@ const Register = () => {
     password: '',
     confirmPassword: '',
   });
+
+  const [avatar, setAvatar] = useState('');
+  const [avatarPreview, setAvatarPreview] = useState('');
 
   const { name, email, password, confirmPassword } = formData;
 
@@ -38,6 +41,35 @@ const Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please select an image file');
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Image size should be less than 5MB');
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          setAvatarPreview(reader.result);
+          setAvatar(reader.result);
+        }
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -58,14 +90,22 @@ const Register = () => {
     }
 
     try {
-      await dispatch(register({ name, email, password })).unwrap();
-      toast.success('Registration successful!');
-    } /* eslint-disable no-unused-vars */
-catch (err) {
-  // Error handled by useEffect
-}
-/* eslint-enable no-unused-vars */
+      const userData = { name, email, password };
+      
+      // Add avatar if uploaded
+      if (avatar) {
+        userData.avatar = {
+          public_id: `avatar_${Date.now()}`,
+          url: avatar,
+        };
+      }
 
+      await dispatch(register(userData)).unwrap();
+      toast.success('Registration successful!');
+    // eslint-disable-next-line no-unused-vars
+    } catch (err) {
+      // Error handled by useEffect
+    }
   };
 
   return (
@@ -84,6 +124,44 @@ catch (err) {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Avatar Upload */}
+            <div className="flex flex-col items-center mb-6">
+              <div className="mb-4">
+                {avatarPreview ? (
+                  <img
+                    src={avatarPreview}
+                    alt="Avatar Preview"
+                    className="w-24 h-24 rounded-full object-cover border-4 border-primary-100"
+                  />
+                ) : (
+                  <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center border-4 border-gray-300">
+                    <FiUser className="text-gray-400" size={40} />
+                  </div>
+                )}
+              </div>
+              <div className="relative">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                  id="avatar-upload"
+                />
+                <label
+                  htmlFor="avatar-upload"
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg cursor-pointer hover:bg-gray-200 transition-colors"
+                >
+                  <FiUpload size={16} />
+                  <span className="text-sm">
+                    {avatarPreview ? 'Change Photo' : 'Upload Photo'}
+                  </span>
+                </label>
+              </div>
+              <p className="text-xs text-gray-500 mt-2 text-center">
+                Optional: JPG, PNG or GIF (Max 5MB)
+              </p>
+            </div>
+
             {/* Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">

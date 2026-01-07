@@ -13,8 +13,8 @@ import notFound from './middlewares/notFound.js';
 const app = express();
 
 // Middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '5mb' }));
+app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || 'http://localhost:5173',

@@ -9,10 +9,11 @@ import User from '../models/User.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import ErrorHandler from '../utils/errorHandler.js';
 import sendToken from '../utils/jwtToken.js';
+import cloudinary from '../config/cloudinary.js'; // ADD THIS IMPORT
 
-// Register User (Updated with email)
+// Register User (Updated with email AND avatar)
 export const registerUser = asyncHandler(async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, avatar } = req.body; // Add avatar
 
   // Check if user already exists
   const existingUser = await User.findOne({ email });
@@ -20,11 +21,36 @@ export const registerUser = asyncHandler(async (req, res, next) => {
     return next(new ErrorHandler('Email already registered', 400));
   }
 
-  // Create user
+  // Handle avatar upload
+  let avatarData = {
+    public_id: 'default_avatar',
+    url: 'https://via.placeholder.com/150'
+  };
+
+  if (avatar && avatar.url) {
+    try {
+      const result = await cloudinary.uploader.upload(avatar.url, {
+        folder: 'avatars',
+        width: 150,
+        crop: 'scale'
+      });
+
+      avatarData = {
+        public_id: result.public_id,
+        url: result.secure_url
+      };
+    } catch (error) {
+      console.log('Avatar upload failed:', error.message);
+      // Continue with default avatar if upload fails
+    }
+  }
+
+  // Create user with avatar
   const user = await User.create({
     name,
     email,
-    password
+    password,
+    avatar: avatarData // Add avatar
   });
 
   // Hide password for response
@@ -190,12 +216,42 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
   sendToken(user, 200, res, 'Password reset successfully');
 });
 
-// Update User Profile
+// Update User Profile (Updated with avatar)
 export const updateProfile = asyncHandler(async (req, res, next) => {
   const newUserData = {
     name: req.body.name,
     email: req.body.email
   };
+
+  // Handle avatar update
+  if (req.body.avatar && req.body.avatar.url) {
+    const user = await User.findById(req.user.id);
+
+    // Delete old avatar from Cloudinary if it exists
+    if (user.avatar && user.avatar.public_id && user.avatar.public_id !== 'default_avatar') {
+      try {
+        await cloudinary.uploader.destroy(user.avatar.public_id);
+      } catch (error) {
+        console.log('Old avatar deletion failed:', error.message);
+      }
+    }
+
+    // Upload new avatar
+    try {
+      const result = await cloudinary.uploader.upload(req.body.avatar.url, {
+        folder: 'avatars',
+        width: 150,
+        crop: 'scale'
+      });
+
+      newUserData.avatar = {
+        public_id: result.public_id,
+        url: result.secure_url
+      };
+    } catch (error) {
+      return next(new ErrorHandler('Avatar upload failed', 500));
+    }
+  }
 
   const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
     new: true,

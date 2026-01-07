@@ -69,7 +69,7 @@ const Header = () => {
                 placeholder="Search products..."
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
-                className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-2 pr-12 text-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
               />
               <button
                 type="submit"

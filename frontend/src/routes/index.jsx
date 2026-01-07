@@ -23,6 +23,8 @@ import Dashboard from '../pages/admin/Dashboard';
 import ProductList from '../pages/admin/ProductList';
 import NewProduct from '../pages/admin/NewProduct';
 import UpdateProduct from '../pages/admin/UpdateProduct';
+import UpdateUser from '../pages/admin/UpdateUser';
+import UserActivity from '../pages/admin/UserActivity';
 import OrderList from '../pages/admin/OrderList';
 import ProcessOrder from '../pages/admin/ProcessOrder';
 import UserList from '../pages/admin/UserList';
@@ -58,7 +60,7 @@ const router = createBrowserRouter([
         element: <FAQ />,
       },
       {
-        path: 'shipping',
+        path: 'shippingpolicy',
         element: <ShippingPolicy />,
       },
       {
@@ -189,6 +191,22 @@ const router = createBrowserRouter([
           <ProtectedRoute isAdmin={true}>
             <UpdateProduct />
           </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'admin/user/:id',
+        element: (
+        <ProtectedRoute isAdmin={true}>
+            <UpdateUser />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'admin/user/:id/activity',
+        element: (
+        <ProtectedRoute isAdmin={true}>
+          <UserActivity />
+        </ProtectedRoute>
         ),
       },
       {
