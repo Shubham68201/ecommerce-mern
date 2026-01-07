@@ -32,6 +32,19 @@ const Products = () => {
     price: [0, 25000],
     page: parseInt(searchParams.get('page')) || 1,
   });
+  
+  useEffect(() => {
+  const updatedFilters = {
+    keyword: searchParams.get('keyword') || '',
+    category: searchParams.get('category') || '',
+    price: [0, 25000],
+    page: parseInt(searchParams.get('page')) || 1,
+  };
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  setFilters(updatedFilters);
+}, [searchParams]);
+
 
   const [showFilters, setShowFilters] = useState(false);
 
