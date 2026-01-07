@@ -28,6 +28,9 @@ import ProcessOrder from '../pages/admin/ProcessOrder';
 import UserList from '../pages/admin/UserList';
 import ProtectedRoute from '../components/layout/ProtectedRoute';
 import NotFound from '../pages/NotFound';
+import PrivacyPolicy from '../pages/static/PrivacyPolicy';
+import TermsOfService from '../pages/static/TermsOfService';
+import CookiePolicy from '../pages/static/CookiePolicy';
 
 const router = createBrowserRouter([
   {
@@ -62,6 +65,18 @@ const router = createBrowserRouter([
         path: 'returns',
         element: <ReturnsPolicy />,
       },
+      {
+        path: 'privacy',
+        element: <PrivacyPolicy />,
+      },
+      {
+        path: 'terms',
+        element: <TermsOfService />,
+      },
+      {
+        path: 'cookies',
+        element: <CookiePolicy />,
+    },
       {
         path: 'register',
         element: <Register />,
