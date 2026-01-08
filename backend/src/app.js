@@ -20,6 +20,15 @@ app.use(
     origin: process.env.FRONTEND_URL || 'http://localhost:5173',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: [
+      'Content-Type', 
+      'Authorization', 
+      'Cookie',
+      'X-Requested-With',
+      'Accept'
+    ],
+    exposedHeaders: ['Set-Cookie'],
+    maxAge: 86400 // 24 hours
   })
 );
 app.use(cookieParser());
