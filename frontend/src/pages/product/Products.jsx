@@ -29,7 +29,7 @@ const Products = () => {
   const [filters, setFilters] = useState({
     keyword: searchParams.get('keyword') || '',
     category: searchParams.get('category') || '',
-    price: [0, 25000],
+    price: [0, 500000],
     page: parseInt(searchParams.get('page')) || 1,
   });
   
@@ -37,7 +37,7 @@ const Products = () => {
   const updatedFilters = {
     keyword: searchParams.get('keyword') || '',
     category: searchParams.get('category') || '',
-    price: [0, 25000],
+    price: [0, 500000],
     page: parseInt(searchParams.get('page')) || 1,
   };
 
@@ -80,7 +80,7 @@ const { products, loading, resultPerPage, filteredProductsCount } =
     setFilters({
       keyword: '',
       category: '',
-      price: [0, 25000],
+      price: [0, 500000],
       page: 1,
     });
     setSearchParams({});
@@ -161,7 +161,7 @@ const { products, loading, resultPerPage, filteredProductsCount } =
                 <input
                   type="range"
                   min="0"
-                  max="25000"
+                  max="500000"
                   value={filters.price[1]}
                   onChange={(e) =>
                     handleFilterChange('price', [0, parseInt(e.target.value)])

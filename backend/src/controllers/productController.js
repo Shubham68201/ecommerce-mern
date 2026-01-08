@@ -19,24 +19,35 @@ export const createProduct = asyncHandler(async (req, res, next) => {
 // Get All Products (with filtering, sorting, pagination)
 export const getAllProducts = asyncHandler(async (req, res, next) => {
   const resultsPerPage = 8;
+
+  // Total products (no filters)
   const productsCount = await Product.countDocuments();
 
+  // Apply search & filter ONLY (no pagination)
+  const apiFeaturesForCount = new ApiFeatures(Product.find(), req.query)
+    .search()
+    .filter();
+
+  const filteredProducts = await apiFeaturesForCount.query;
+  const filteredProductsCount = filteredProducts.length;
+
+  // Apply pagination
   const apiFeatures = new ApiFeatures(Product.find(), req.query)
     .search()
     .filter()
     .pagination(resultsPerPage);
 
-  let products = await apiFeatures.query;
-  let filteredProductsCount = products.length;
+  const products = await apiFeatures.query;
 
   res.status(200).json({
     success: true,
     productsCount,
     resultsPerPage,
     filteredProductsCount,
-    products
+    products,
   });
 });
+
 
 // Get All Products (Admin - No filters)
 export const getAdminProducts = asyncHandler(async (req, res, next) => {
