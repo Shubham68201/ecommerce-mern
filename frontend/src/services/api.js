@@ -11,7 +11,7 @@ const API = axios.create({
 // Request interceptor
 API.interceptors.request.use(
   (config) => {
-    // You can add auth token here if needed
+    // Add auth token from localStorage as backup
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -25,7 +25,13 @@ API.interceptors.request.use(
 
 // Response interceptor
 API.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Store token if it's in the response (from login/register)
+    if (response.data?.token) {
+      localStorage.setItem('token', response.data.token);
+    }
+    return response;
+  },
   (error) => {
     const message =
       error.response?.data?.message ||
@@ -34,9 +40,14 @@ API.interceptors.response.use(
     
     // Handle specific error codes
     if (error.response?.status === 401) {
-      // Redirect to login or handle unauthorized
+      // Clear auth data and redirect to login
       localStorage.removeItem('token');
-      window.location.href = '/login';
+      localStorage.removeItem('user');
+      
+      // Only redirect if not already on login page
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
     }
     
     return Promise.reject({
