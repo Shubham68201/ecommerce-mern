@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { Analytics } from '@vercel/analytics/react';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 
@@ -35,6 +36,7 @@ function App() {
         <Outlet />
       </main>
       <Footer />
+      <Analytics />
     </div>
   );
 }
